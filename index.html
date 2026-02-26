@@ -6,18 +6,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-    body { background: #f4f6f9; color: #222; }
-    header { background: #0f172a; color: white; padding: 20px; text-align: center; }
+    body { background: #0a0a0a; color: #f5f5f5; }
+    header { background: linear-gradient(135deg, #000000, #8b0000); color: gold; padding: 20px; text-align: center; }
     header img { height: 70px; margin-bottom: 10px; }
-    nav { background: #1e293b; padding: 10px; text-align: center; }
-    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: 500; }
-    nav a:hover { color: #38bdf8; }
+    nav { background: #111111; padding: 10px; text-align: center; border-top: 2px solid gold; border-bottom: 2px solid gold; }
+    nav a { color: gold; margin: 0 15px; text-decoration: none; font-weight: 600; }
+    nav a:hover { color: #ff0000; }
     section { padding: 40px 20px; max-width: 1100px; margin: auto; }
-    h2 { margin-bottom: 20px; color: #0f172a; }/* Cards */
+    h2 { margin-bottom: 20px; color: gold; text-align: center; }/* Cards */
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-.card {
-  perspective: 1000px;
-}
+.card { perspective: 1000px; }
 .card-inner {
   position: relative;
   width: 100%;
@@ -39,47 +37,72 @@
   justify-content: center;
   align-items: center;
   padding: 15px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(255,215,0,0.2);
 }
-.card-front { background: white; }
+.card-front { background: #1a1a1a; color: gold; border: 1px solid gold; }
 .card-back {
-  background: #0ea5e9;
-  color: white;
+  background: #8b0000;
+  color: gold;
   transform: rotateY(180deg);
 }
 
 /* Leadership */
 .leader {
-  background: white;
+  background: #1a1a1a;
   padding: 20px;
   border-radius: 16px;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  border: 1px solid gold;
+  box-shadow: 0 8px 20px rgba(255,0,0,0.2);
+  position: relative;
+  overflow: hidden;
 }
-.leader img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; }
+
+/* Spotlight Animation */
+.spotlight::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255,215,0,0.35) 0%, transparent 60%);
+  animation: rotateLight 6s linear infinite;
+}
+
+@keyframes rotateLight {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spotlight {
+  border: 2px solid gold;
+  box-shadow: 0 0 20px gold, 0 0 40px red;
+}
+.leader img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid gold; }
 
 /* Contact */
 .contact-box {
-  background: #0f172a;
-  color: white;
+  background: #000000;
+  color: gold;
   padding: 25px;
   border-radius: 16px;
-  text-align: center;
+  border: 2px solid #8b0000;
 }
-.contact-box a { color: #38bdf8; text-decoration: none; }
+.contact-box a { color: #ff0000; text-decoration: none; font-weight: 600; }
 
 footer {
   text-align: center;
   padding: 20px;
-  background: #020617;
-  color: #cbd5e1;
+  background: #000000;
+  color: gold;
   margin-top: 40px;
+  border-top: 2px solid #8b0000;
 }
 
   </style>
 </head>
 <body><header>
-  <!-- Replace logo.png with your real logo -->
   <img src="logo.png" alt="RMB Club Logo" />
   <h1>RMB Club Kolazhy</h1>
   <p>Unity • Sports • Leadership</p>
@@ -90,7 +113,7 @@ footer {
   <a href="#contact">Contact</a>
 </nav><section id="about">
   <h2>About Our Club</h2>
-  <p>
+  <p style="text-align:center; max-width:700px; margin:auto;">
     RMB Club Kolazhy is a vibrant youth club focused on sports excellence,
     teamwork, and leadership development. We actively conduct tournaments,
     matches, and training programs to empower young talents.
@@ -128,20 +151,20 @@ footer {
 </section><section id="leadership">
   <h2>Leadership Team</h2>
   <div class="grid">
-    <div class="leader">
-      <img src="leader1.jpg" alt="Leader">
-      <h4>President</h4>
-      <p>RMB Club</p>
+    <div class="leader spotlight">
+      <img src="leader1.jpg" alt="President">
+      <h4>Seeehari Menon</h4>
+      <p>President & Founder</p>
+    </div>
+    <div class="leader spotlight">
+      <img src="leader2.jpg" alt="Secretary">
+      <h4>Visnu Das</h4>
+      <p>Secretary & Co-Founder</p>
     </div>
     <div class="leader">
-      <img src="leader2.jpg" alt="Leader">
-      <h4>Secretary</h4>
-      <p>RMB Club</p>
-    </div>
-    <div class="leader">
-      <img src="leader3.jpg" alt="Leader">
-      <h4>Captain</h4>
-      <p>RMB Club</p>
+      <img src="leader3.jpg" alt="Treasurer">
+      <h4>Harinarayan</h4>
+      <p>Treasurer</p>
     </div>
   </div>
 </section><section id="contact">
@@ -156,5 +179,35 @@ footer {
   </div>
 </section><footer>
   <p>© 2026 RMB Club Kolazhy. All rights reserved.</p>
-</footer></body>
+</footer><!-- AI KUDO Section --><section id="kudo" style="max-width:900px;margin:40px auto;padding:20px;background:#111;border:2px solid gold;border-radius:16px;">
+  <h2 style="text-align:center;color:gold;">KUDO AI Assistant</h2>
+  <div id="chatBox" style="height:300px;overflow-y:auto;background:#000;padding:15px;border-radius:10px;border:1px solid #8b0000;margin-bottom:15px;"></div>
+  <div style="display:flex;gap:10px;">
+    <input type="text" id="userInput" placeholder="Ask KUDO something..." style="flex:1;padding:10px;border-radius:8px;border:1px solid gold;background:#1a1a1a;color:white;">
+    <button onclick="sendMessage()" style="padding:10px 20px;background:#8b0000;color:gold;border:none;border-radius:8px;cursor:pointer;">Send</button>
+  </div>
+</section><script>
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const chatBox = document.getElementById("chatBox");
+  const message = input.value.trim();
+  if(message === "") return;
+
+  chatBox.innerHTML += `<p style='color:gold;'><strong>You:</strong> ${message}</p>`;
+
+  let reply = "I am KUDO AI, built by Sreehari for RMB Club. I help with club information, sports updates, and leadership details.";
+
+  if(message.toLowerCase().includes("football")) {
+    reply = "RMB Club conducts football tournaments, matches, and team training sessions.";
+  } else if(message.toLowerCase().includes("cricket")) {
+    reply = "RMB Club organizes cricket matches, tournaments, and training programs.";
+  } else if(message.toLowerCase().includes("president")) {
+    reply = "The President and Founder of RMB Club is Seeehari Menon.";
+  }
+
+  chatBox.innerHTML += `<p style='color:red;'><strong>KUDO:</strong> ${reply}</p>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+  input.value = "";
+}
+</script></body>
 </html>
