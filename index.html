@@ -206,7 +206,7 @@ function saveChat() {
   localStorage.setItem("rmb_kudo_chat", chatBox.innerHTML);
 }
 
-function createBubble(sender, message, isHTML=false) {
+function createBubble(type, content, isHTML=false) {
   const bubble = document.createElement("div");
   bubble.style.maxWidth = "75%";
   bubble.style.margin = "8px 0";
@@ -214,16 +214,16 @@ function createBubble(sender, message, isHTML=false) {
   bubble.style.borderRadius = "15px";
   bubble.style.fontSize = "14px";
 
-  if(sender === "user") {
+  if(type === "user") {
     bubble.style.background = "gold";
     bubble.style.color = "black";
     bubble.style.marginLeft = "auto";
-    bubble.innerText = message;
+    bubble.innerText = content;
   } else {
     bubble.style.background = "#8b0000";
     bubble.style.color = "white";
-    if(isHTML) bubble.innerHTML = message;
-    else bubble.innerText = message;
+    if(isHTML) bubble.innerHTML = content;
+    else bubble.innerText = content;
   }
 
   chatBox.appendChild(bubble);
@@ -234,17 +234,49 @@ function createBubble(sender, message, isHTML=false) {
 
 function addBotMessage(text, isHTML=false) {
   const bubble = createBubble("bot", "");
+
+  if(isHTML) {
+    bubble.innerHTML = text;
+    saveChat();
+    return;
+  }
+
   let i = 0;
   const interval = setInterval(() => {
-    if(isHTML) {
-      bubble.innerHTML = text;
+    bubble.innerText += text.charAt(i);
+    i++;
+    if(i >= text.length) {
       clearInterval(interval);
-    } else {
-      bubble.innerText += text.charAt(i);
-      i++;
-      if(i >= text.length) clearInterval(interval);
+      saveChat();
     }
   }, 20);
+}
+
+function generateReply(message) {
+  const msg = message.toLowerCase();
+
+  if(msg.includes("football"))
+    return "RMB Club conducts football tournaments, matches, and professional team training sessions.";
+
+  if(msg.includes("cricket"))
+    return "RMB Club organizes cricket matches, tournaments, and structured training programs.";
+
+  if(msg.includes("president") || msg.includes("founder"))
+    return "The President & Founder of RMB Club is Seeehari Menon.";
+
+  if(msg.includes("secretary") || msg.includes("co founder"))
+    return "The Secretary & Co-Founder is Visnu Das.";
+
+  if(msg.includes("treasurer"))
+    return "The Treasurer is Harinarayan.";
+
+  if(msg.includes("director"))
+    return "The Director is Athulkrishna.";
+
+  if(msg.includes("contact") || msg.includes("information") || msg.includes("instagram") || msg.includes("email"))
+    return "Contact us via Instagram or email rmb107kolazhy@gmail.com for further information.";
+
+  return "I am KUDO AI. Ask me about football, cricket, leadership team, or contact details.";
 }
 
 function sendMessage() {
@@ -254,28 +286,8 @@ function sendMessage() {
   createBubble("user", message);
   inputField.value = "";
 
-  let reply = "I can help you with RMB Club sports and leadership information.";
-  let isHTML = false;
-  const msg = message.toLowerCase();
-
-  if(msg.includes("football")) {
-    reply = "RMB Club conducts football tournaments, matches, and professional team training sessions.";
-  } else if(msg.includes("cricket")) {
-    reply = "RMB Club organizes cricket matches, tournaments, and structured training programs.";
-  } else if(msg.includes("president") || msg.includes("founder")) {
-    reply = "The President & Founder of RMB Club is Seeehari Menon.";
-  } else if(msg.includes("secretary") || msg.includes("co founder")) {
-    reply = "The Secretary & Co-Founder is Visnu Das.";
-  } else if(msg.includes("treasurer")) {
-    reply = "The Treasurer is Harinarayan.";
-  } else if(msg.includes("director")) {
-    reply = "The Director is Athulkrishna.";
-  } else if(msg.includes("contact") || msg.includes("information") || msg.includes("instagram") || msg.includes("email")) {
-    reply = "Contact us via <a href='https://www.instagram.com/_r_m_b_club_kolazhy_?igsh=bjE3MzhqbHJ6NWpw' target='_blank' style='color:gold;'>Instagram</a> or <a href='mailto:rmb107kolazhy@gmail.com' style='color:gold;'>Email</a> for further information.";
-    isHTML = true;
-  }
-
-  addBotMessage(reply, isHTML);
+  const reply = generateReply(message);
+  addBotMessage(reply);
 }
 
 // Enter key support
@@ -296,18 +308,6 @@ function startVoice() {
     inputField.value = event.results[0][0].transcript;
     sendMessage();
   };
-}
-
-// Optional: Real API Placeholder
-async function connectRealAI(userMessage) {
-  // Replace with real API endpoint
-  const response = await fetch("YOUR_API_ENDPOINT", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: userMessage })
-  });
-  const data = await response.json();
-  return data.reply;
 }
 </script></body>
 </html>
