@@ -195,18 +195,16 @@ footer {
 const chatBox = document.getElementById("chatBox");
 const inputField = document.getElementById("userInput");
 
-// Load Saved Chat
-window.onload = function() {
-  const saved = localStorage.getItem("rmb_kudo_chat");
-  if(saved) chatBox.innerHTML = saved;
-  else addBotMessage("Welcome to RMB Club! I am KUDO AI. Ask me about sports, leadership, or contact details.");
-};
+// CLEAR OLD BUGGED DATA (runs once)
+localStorage.removeItem("rmb_kudo_chat");
 
-function saveChat() {
-  localStorage.setItem("rmb_kudo_chat", chatBox.innerHTML);
-}
+// Simple Welcome (no loop)
+window.addEventListener("load", function() {
+  chatBox.innerHTML = "";
+  addMessage("bot", "Welcome to RMB Club! I am KUDO AI. Ask me about football, cricket, leadership, or contact details.");
+});
 
-function createBubble(type, content, isHTML=false) {
+function addMessage(type, text) {
   const bubble = document.createElement("div");
   bubble.style.maxWidth = "75%";
   bubble.style.margin = "8px 0";
@@ -218,45 +216,22 @@ function createBubble(type, content, isHTML=false) {
     bubble.style.background = "gold";
     bubble.style.color = "black";
     bubble.style.marginLeft = "auto";
-    bubble.innerText = content;
+    bubble.innerText = text;
   } else {
     bubble.style.background = "#8b0000";
     bubble.style.color = "white";
-    if(isHTML) bubble.innerHTML = content;
-    else bubble.innerText = content;
+    bubble.innerText = text;
   }
 
   chatBox.appendChild(bubble);
   chatBox.scrollTop = chatBox.scrollHeight;
-  saveChat();
-  return bubble;
 }
 
-function addBotMessage(text, isHTML=false) {
-  const bubble = createBubble("bot", "");
-
-  if(isHTML) {
-    bubble.innerHTML = text;
-    saveChat();
-    return;
-  }
-
-  let i = 0;
-  const interval = setInterval(() => {
-    bubble.innerText += text.charAt(i);
-    i++;
-    if(i >= text.length) {
-      clearInterval(interval);
-      saveChat();
-    }
-  }, 20);
-}
-
-function generateReply(message) {
+function getReply(message) {
   const msg = message.toLowerCase();
 
   if(msg.includes("football"))
-    return "RMB Club conducts football tournaments, matches, and professional team training sessions.";
+    return "RMB Club conducts football tournaments, matches, and professional training sessions.";
 
   if(msg.includes("cricket"))
     return "RMB Club organizes cricket matches, tournaments, and structured training programs.";
@@ -273,41 +248,29 @@ function generateReply(message) {
   if(msg.includes("director"))
     return "The Director is Athulkrishna.";
 
-  if(msg.includes("contact") || msg.includes("information") || msg.includes("instagram") || msg.includes("email"))
+  if(msg.includes("contact") || msg.includes("instagram") || msg.includes("email"))
     return "Contact us via Instagram or email rmb107kolazhy@gmail.com for further information.";
 
-  return "I am KUDO AI. Ask me about football, cricket, leadership team, or contact details.";
+  return "I can answer about football, cricket, leadership team, or contact details.";
 }
 
 function sendMessage() {
   const message = inputField.value.trim();
   if(message === "") return;
 
-  createBubble("user", message);
+  addMessage("user", message);
   inputField.value = "";
 
-  const reply = generateReply(message);
-  addBotMessage(reply);
+  const reply = getReply(message);
+  addMessage("bot", reply);
 }
 
 // Enter key support
-inputField.addEventListener("keypress", function(e) {
-  if(e.key === "Enter") sendMessage();
-});
-
-// Voice Assistant
-function startVoice() {
-  if (!('webkitSpeechRecognition' in window)) {
-    alert("Voice recognition not supported in this browser.");
-    return;
-  }
-  const recognition = new webkitSpeechRecognition();
-  recognition.lang = "en-IN";
-  recognition.start();
-  recognition.onresult = function(event) {
-    inputField.value = event.results[0][0].transcript;
+inputField.addEventListener("keydown", function(e) {
+  if(e.key === "Enter") {
+    e.preventDefault();
     sendMessage();
-  };
-}
+  }
+});
 </script></body>
 </html>
