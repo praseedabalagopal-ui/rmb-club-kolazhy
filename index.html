@@ -192,27 +192,122 @@ footer {
     <button onclick="sendMessage()" style="padding:10px 20px;background:#8b0000;color:gold;border:none;border-radius:8px;cursor:pointer;">Send</button>
   </div>
 </section><script>
-function sendMessage() {
-  const input = document.getElementById("userInput");
-  const chatBox = document.getElementById("chatBox");
-  const message = input.value.trim();
-  if(message === "") return;
+const chatBox = document.getElementById("chatBox");
+const inputField = document.getElementById("userInput");
 
-  chatBox.innerHTML += `<p style='color:gold;'><strong>You:</strong> ${message}</p>`;
+// Load Saved Chat
+window.onload = function() {
+  const saved = localStorage.getItem("rmb_kudo_chat");
+  if(saved) chatBox.innerHTML = saved;
+  else addBotMessage("Welcome to RMB Club! I am KUDO AI. Ask me about sports, leadership, or contact details.");
+};
 
-  let reply = "I am KUDO AI, built by Sreehari for RMB Club. I help with club information, sports updates, and leadership details.";
+function saveChat() {
+  localStorage.setItem("rmb_kudo_chat", chatBox.innerHTML);
+}
 
-  if(message.toLowerCase().includes("football")) {
-    reply = "RMB Club conducts football tournaments, matches, and team training sessions.";
-  } else if(message.toLowerCase().includes("cricket")) {
-    reply = "RMB Club organizes cricket matches, tournaments, and training programs.";
-  } else if(message.toLowerCase().includes("president")) {
-    reply = "The President and Founder of RMB Club is Seeehari Menon.";
+function createBubble(sender, message, isHTML=false) {
+  const bubble = document.createElement("div");
+  bubble.style.maxWidth = "75%";
+  bubble.style.margin = "8px 0";
+  bubble.style.padding = "10px 15px";
+  bubble.style.borderRadius = "15px";
+  bubble.style.fontSize = "14px";
+
+  if(sender === "user") {
+    bubble.style.background = "gold";
+    bubble.style.color = "black";
+    bubble.style.marginLeft = "auto";
+    bubble.innerText = message;
+  } else {
+    bubble.style.background = "#8b0000";
+    bubble.style.color = "white";
+    if(isHTML) bubble.innerHTML = message;
+    else bubble.innerText = message;
   }
 
-  chatBox.innerHTML += `<p style='color:red;'><strong>KUDO:</strong> ${reply}</p>`;
+  chatBox.appendChild(bubble);
   chatBox.scrollTop = chatBox.scrollHeight;
-  input.value = "";
+  saveChat();
+  return bubble;
+}
+
+function addBotMessage(text, isHTML=false) {
+  const bubble = createBubble("bot", "");
+  let i = 0;
+  const interval = setInterval(() => {
+    if(isHTML) {
+      bubble.innerHTML = text;
+      clearInterval(interval);
+    } else {
+      bubble.innerText += text.charAt(i);
+      i++;
+      if(i >= text.length) clearInterval(interval);
+    }
+  }, 20);
+}
+
+function sendMessage() {
+  const message = inputField.value.trim();
+  if(message === "") return;
+
+  createBubble("user", message);
+  inputField.value = "";
+
+  let reply = "I can help you with RMB Club sports and leadership information.";
+  let isHTML = false;
+  const msg = message.toLowerCase();
+
+  if(msg.includes("football")) {
+    reply = "RMB Club conducts football tournaments, matches, and professional team training sessions.";
+  } else if(msg.includes("cricket")) {
+    reply = "RMB Club organizes cricket matches, tournaments, and structured training programs.";
+  } else if(msg.includes("president") || msg.includes("founder")) {
+    reply = "The President & Founder of RMB Club is Seeehari Menon.";
+  } else if(msg.includes("secretary") || msg.includes("co founder")) {
+    reply = "The Secretary & Co-Founder is Visnu Das.";
+  } else if(msg.includes("treasurer")) {
+    reply = "The Treasurer is Harinarayan.";
+  } else if(msg.includes("director")) {
+    reply = "The Director is Athulkrishna.";
+  } else if(msg.includes("contact") || msg.includes("information") || msg.includes("instagram") || msg.includes("email")) {
+    reply = "Contact us via <a href='https://www.instagram.com/_r_m_b_club_kolazhy_?igsh=bjE3MzhqbHJ6NWpw' target='_blank' style='color:gold;'>Instagram</a> or <a href='mailto:rmb107kolazhy@gmail.com' style='color:gold;'>Email</a> for further information.";
+    isHTML = true;
+  }
+
+  addBotMessage(reply, isHTML);
+}
+
+// Enter key support
+inputField.addEventListener("keypress", function(e) {
+  if(e.key === "Enter") sendMessage();
+});
+
+// Voice Assistant
+function startVoice() {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("Voice recognition not supported in this browser.");
+    return;
+  }
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = "en-IN";
+  recognition.start();
+  recognition.onresult = function(event) {
+    inputField.value = event.results[0][0].transcript;
+    sendMessage();
+  };
+}
+
+// Optional: Real API Placeholder
+async function connectRealAI(userMessage) {
+  // Replace with real API endpoint
+  const response = await fetch("YOUR_API_ENDPOINT", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: userMessage })
+  });
+  const data = await response.json();
+  return data.reply;
 }
 </script></body>
 </html>
